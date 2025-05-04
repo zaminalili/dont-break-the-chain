@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+using Domain.Entities;
 
 namespace Infrastructure.Extensions
 {
@@ -15,6 +17,10 @@ namespace Infrastructure.Extensions
                 opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
             
             // Other services like repositories, caching, etc.
+
+            services.AddIdentityCore<User>()
+                    .AddRoles<Role>()
+                    .AddEntityFrameworkStores<DBChDbContext>();
         }
     }
 }

@@ -1,5 +1,6 @@
 using API.Extensions;
 using Application.Extensions;
+using Domain.Entities;
 using Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +22,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
+
+app.MapGroup("v1/identity").MapIdentityApi<User>();
 
 app.Run();
