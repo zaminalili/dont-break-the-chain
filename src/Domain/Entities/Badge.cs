@@ -7,4 +7,7 @@ public class Badge
     public string IconUrl { get; set; } = default!;
     public string? Description { get; set; }
 
+
+    // Navigation properties
+    public ICollection<UserBadge> Users { get; set; } = default!;
 }

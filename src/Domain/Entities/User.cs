@@ -6,6 +6,7 @@ public class User : IdentityUser<Guid>
 {
 
     // Navigation properties
-    public ICollection<Badge> Badges { get; set; } = default!;
+    public ICollection<UserBadge> Badges { get; set; } = default!;
     public UserSettings Settings { get; set; } = default!;
+    public ICollection<Chain> Chains { get; set; } = default!;
 }
