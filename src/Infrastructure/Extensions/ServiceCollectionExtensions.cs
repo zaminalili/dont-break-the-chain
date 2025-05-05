@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
+using Domain.Repositories;
+using Infrastructure.Repositories;
 
 namespace Infrastructure.Extensions
 {
@@ -21,6 +23,8 @@ namespace Infrastructure.Extensions
             services.AddIdentityCore<User>()
                     .AddRoles<Role>()
                     .AddEntityFrameworkStores<DBChDbContext>();
+
+            services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
         }
     }
 }
