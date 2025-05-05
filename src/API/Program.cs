@@ -1,5 +1,6 @@
 using API.Extensions;
 using Application.Extensions;
+using Domain.Entities;
 using Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,12 +17,16 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwaggerUI(opt => opt.SwaggerEndpoint("/openapi/v1.json", "Openapi"));
 }
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
+
+app.MapGroup("v1/identity").MapIdentityApi<User>();
 
 app.Run();

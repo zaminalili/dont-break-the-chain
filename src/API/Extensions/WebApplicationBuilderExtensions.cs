@@ -1,4 +1,6 @@
-﻿namespace API.Extensions
+﻿using Domain.Entities;
+
+namespace API.Extensions
 {
     public static class WebApplicationBuilderExtensions
     {
@@ -7,6 +9,9 @@
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+
+            builder.Services.AddIdentityApiEndpoints<User>();
+            builder.Services.AddAuthentication();
         }
     }
 }
