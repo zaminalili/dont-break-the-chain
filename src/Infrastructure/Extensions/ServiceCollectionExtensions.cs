@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
 using Domain.Repositories;
 using Infrastructure.Repositories;
+using Infrastructure.Seeders;
+
 
 namespace Infrastructure.Extensions
 {
@@ -25,6 +27,8 @@ namespace Infrastructure.Extensions
                     .AddEntityFrameworkStores<DBChDbContext>();
 
             services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+
+            services.AddScoped<ISeeder, Seeder>();
         }
     }
 }
