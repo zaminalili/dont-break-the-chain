@@ -67,7 +67,7 @@ internal class ChainRepository : RepositoryBase<Chain>, IChainRepository
         return await PaginateChains(pageNumber, pageSize, baseQuery);
     }
 
-    public async Task<(IEnumerable<Chain>, int)> GetPublicChainsByUserAsync(Guid userId, int pageNumber = 1, int pageSize = 3)
+    public async Task<(IEnumerable<Chain>, int)> GetAllChainsByUserAsync(Guid userId, int pageNumber = 1, int pageSize = 3)
     {
         var baseQuery = dbSet
             .Where(ch => ch.UserId == userId);

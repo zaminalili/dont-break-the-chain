@@ -4,7 +4,7 @@ namespace Domain.Repositories;
 
 public interface IChainRepository : IRepositoryBase<Chain>
 {
-    Task<(IEnumerable<Chain>, int)> GetPublicChainsByUserAsync(Guid userId, int pageNumber = 1, int pageSize = 3);
+    Task<(IEnumerable<Chain>, int)> GetAllChainsByUserAsync(Guid userId, int pageNumber = 1, int pageSize = 3);
     Task<(IEnumerable<Chain>, int)> GetChainsByUserAsync(Guid userId, bool isPublic = true, int pageNumber = 1, int pageSize = 3);
     Task<(IEnumerable<Chain>, int)> GetChainsByUserAndCategoryAsync(Guid userId, Guid categoryId, bool isPublic = true, int pageNumber = 1, int pageSize = 3);
     Task<(IEnumerable<Chain>, int)> GetPublicChainsByCategoryAsync(Guid categoryId, int pageNumber = 1, int pageSize = 15);
