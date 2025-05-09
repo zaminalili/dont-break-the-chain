@@ -1,4 +1,5 @@
 using API.Extensions;
+using API.Middlewares;
 using Application.Extensions;
 using Domain.Entities;
 using Infrastructure.Extensions;
@@ -34,5 +35,7 @@ app.UseAuthentication();
 app.MapControllers();
 
 app.MapGroup("v1/identity").MapIdentityApi<User>();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.Run();

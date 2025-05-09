@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using API.Middlewares;
+using Domain.Entities;
 
 namespace API.Extensions
 {
@@ -12,6 +13,8 @@ namespace API.Extensions
 
             builder.Services.AddIdentityApiEndpoints<User>();
             builder.Services.AddAuthentication();
+
+            builder.Services.AddScoped<ErrorHandlingMiddleware>();
         }
     }
 }
