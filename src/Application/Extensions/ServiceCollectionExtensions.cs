@@ -11,6 +11,7 @@ namespace Application.Extensions
         {
             services.AddMapster(); 
 
+            services.AddScoped<IChainService, ChainService>();
         }
     }
 }
