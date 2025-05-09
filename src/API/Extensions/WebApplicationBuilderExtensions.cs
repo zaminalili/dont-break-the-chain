@@ -1,4 +1,5 @@
-﻿using API.Middlewares;
+﻿using API.Attributes;
+using API.Middlewares;
 using Domain.Entities;
 
 namespace API.Extensions
@@ -7,7 +8,10 @@ namespace API.Extensions
     {
         public static void AddPresentation(this WebApplicationBuilder builder)
         {
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add<ValidateModelAttribute>();
+            });
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
