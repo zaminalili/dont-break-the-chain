@@ -29,6 +29,7 @@ namespace Infrastructure.Extensions
             services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
             services.AddScoped<IChainRepository, ChainRepository>();
+            services.AddScoped<IChainEntryRepository, ChainEntryRepository>();
 
             services.AddScoped<ISeeder, Seeder>();
         }
