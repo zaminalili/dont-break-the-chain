@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
+using Infrastructure.Extensions;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,18 +10,6 @@ internal class ChainRepository : RepositoryBase<Chain>, IChainRepository
 {
     public ChainRepository(DBChDbContext dbContext) : base(dbContext)
     {
-    }
-
-    private async Task<(IEnumerable<Chain>, int)> PaginateChains(int pageNumber, int pageSize, IQueryable<Chain> baseQuery)
-    {
-        int totalCount = await baseQuery.CountAsync();
-
-        var chains = await baseQuery
-            .Skip(pageSize * (pageNumber - 1))
-            .Take(pageSize)
-            .ToListAsync();
-
-        return (chains, totalCount);
     }
 
 
@@ -43,7 +32,7 @@ internal class ChainRepository : RepositoryBase<Chain>, IChainRepository
                             && ch.CategoryId == categoryId
                             && ch.IsPublic == true);
 
-        return await PaginateChains(pageNumber, pageSize, baseQuery);
+        return await baseQuery.PaginateAsync(pageNumber, pageSize);
     }
 
 
@@ -54,7 +43,7 @@ internal class ChainRepository : RepositoryBase<Chain>, IChainRepository
             .Where(ch => ch.CategoryId == categoryId
                          && ch.IsPublic == true);
 
-        return await PaginateChains(pageNumber, pageSize, baseQuery);
+        return await baseQuery.PaginateAsync(pageNumber, pageSize);
     }
 
     public async Task<(IEnumerable<Chain>, int)> GetChainsByUserAndCategoryAsync(Guid userId, Guid categoryId, bool isPublic = true, int pageNumber = 1, int pageSize = 3)
@@ -64,7 +53,7 @@ internal class ChainRepository : RepositoryBase<Chain>, IChainRepository
                      && ch.CategoryId == categoryId
                      && ch.IsPublic == isPublic);
 
-        return await PaginateChains(pageNumber, pageSize, baseQuery);
+        return await baseQuery.PaginateAsync(pageNumber, pageSize);
     }
 
     public async Task<(IEnumerable<Chain>, int)> GetAllChainsByUserAsync(Guid userId, int pageNumber = 1, int pageSize = 3)
@@ -72,7 +61,7 @@ internal class ChainRepository : RepositoryBase<Chain>, IChainRepository
         var baseQuery = dbSet
             .Where(ch => ch.UserId == userId);
 
-        return await PaginateChains(pageNumber, pageSize, baseQuery);
+        return await baseQuery.PaginateAsync(pageNumber, pageSize);
     }
 
     public async Task<(IEnumerable<Chain>, int)> GetChainsByUserAsync(Guid userId, bool isPublic = true, int pageNumber = 1, int pageSize = 3)
@@ -81,6 +70,6 @@ internal class ChainRepository : RepositoryBase<Chain>, IChainRepository
             .Where(ch => ch.UserId == userId
                      && ch.IsPublic == isPublic);
 
-        return await PaginateChains(pageNumber, pageSize, baseQuery);
+        return await baseQuery.PaginateAsync(pageNumber, pageSize);
     }
 }
