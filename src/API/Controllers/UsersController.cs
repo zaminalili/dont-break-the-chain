@@ -10,7 +10,7 @@ namespace API.Controllers
     [ApiController]
     [Authorize]
     [ValidateModel]
-    public class UsersController(IChainService chainService) : ControllerBase
+    public class UsersController(IChainService chainService, IChainEntryService chainEntryService) : ControllerBase
     {
         [HttpPost]
         [Route("chains")]
@@ -54,6 +54,20 @@ namespace API.Controllers
             request.Id = chainId;
             var response = await chainService.UpdateChainAsync(request);
             return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("chains/{chainId}/check-in")]
+        public async Task<IActionResult> CheckIn([FromRoute] Guid userId, [FromRoute] Guid chainId, [FromBody] CheckInDto checkInDto)
+        {
+            await chainService.IncreaseStreakAsync(chainId);
+            await chainEntryService.CreateChainEntryAsync(new CreateChainEntryDto
+            {
+                ChainId = chainId,
+                Date = checkInDto.Date,
+            });
+
+            return Ok("Check-in successfully");
         }
     }
 }
