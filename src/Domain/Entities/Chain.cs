@@ -8,8 +8,9 @@ public class Chain
 
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
-    //public bool IsBroken { get; set; }
+    public bool IsBroken { get; set; }
     public int CurrentStreak { get; set; }
+    public int LongStreak { get; set; }
     public bool IsPublic { get; set; } = true;
     public int RecoveryCount { get; set; } = 3;
     public int UsedRecoveryCount { get; set; }

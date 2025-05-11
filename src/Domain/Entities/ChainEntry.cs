@@ -5,6 +5,7 @@ public class ChainEntry
     public Guid Id { get; set; } = Guid.NewGuid();
     public DateTime Date { get; set; }
     public string? Note { get; set; }
+    public string? ImageUrl { get; set; }
     public bool IsCompleted { get; set; }
 
     // foreign keys
