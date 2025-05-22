@@ -1,6 +1,7 @@
 ﻿using API.Attributes;
 using Application.DTOs;
 using Application.Services.Abstract;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +11,7 @@ namespace API.Controllers
     [ApiController]
     [Authorize]
     [ValidateModel]
-    public class UsersController(IChainService chainService, IChainEntryService chainEntryService) : ControllerBase
+    public class UsersController(IChainService chainService, IChainEntryService chainEntryService, IImageValidator imageValidator) : ControllerBase
     {
         [HttpPost]
         [Route("chains")]
@@ -58,16 +59,30 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("chains/{chainId}/check-in")]
-        public async Task<IActionResult> CheckIn([FromRoute] Guid userId, [FromRoute] Guid chainId, [FromBody] CheckInDto checkInDto)
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult<CheckInResponseDto>> CheckIn([FromForm] CheckInDto dto)
         {
-            await chainService.IncreaseStreakAsync(chainId);
+
+            var isMatch = await imageValidator.IsMatchAsync(dto.Image, dto.CategoryName);
+
+            var response = new CheckInResponseDto
+            {
+                CheckinStatus = isMatch
+            };
+
+            if (isMatch == false)
+                return BadRequest(response);
+
+
+            await chainService.IncreaseStreakAsync(dto.ChainId);
             await chainEntryService.CreateChainEntryAsync(new CreateChainEntryDto
             {
-                ChainId = chainId,
-                Date = checkInDto.Date,
+                ChainId = dto.ChainId,
+                Date = dto.Date,
+                Note = dto.Note,
             });
 
-            return Ok("Check-in successfully");
+            return Ok(response);
         }
     }
 }
