@@ -19,6 +19,7 @@ namespace API.Extensions
             builder.Services.AddAuthentication();
 
             builder.Services.AddScoped<ErrorHandlingMiddleware>();
+            builder.Services.AddHttpClient();
         }
     }
 }

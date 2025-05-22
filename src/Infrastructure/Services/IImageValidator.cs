@@ -1,5 +1,4 @@
-﻿using Infrastructure.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace Infrastructure.Services;
 
