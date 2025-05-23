@@ -4,17 +4,18 @@ using Application.Services.Abstract;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
-    [Route("v1/[controller]/{userId:guid}")]
+    [Route("v1/[controller]")]
     [ApiController]
     [Authorize]
     [ValidateModel]
     public class UsersController(IChainService chainService, IChainEntryService chainEntryService, IImageValidator imageValidator) : ControllerBase
     {
         [HttpPost]
-        [Route("chains")]
+        [Route("{userId:guid}/chains")]
         public async Task<IActionResult> Create([FromRoute] Guid userId, [FromBody] CreateChainDto request)
         {
             request.UserId = userId;
@@ -24,7 +25,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("chains")]
+        [Route("{userId:guid}/chains")]
         public async Task<ActionResult<ResponseDto<IEnumerable<ChainDto>>>> GetChainsByUserId([FromRoute] Guid userId, [FromQuery] ChainsRequestDto request)
         {
             request.Id = userId;
@@ -33,7 +34,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("chains/{chainId}")]
+        [Route("{userId:guid}/chains/{chainId}")]
         public async Task<ActionResult<ResponseDto<ChainDto>>> GetChainById([FromRoute] Guid userId, [FromRoute] Guid chainId)
         {
             var response = await chainService.GetChainByIdAsync(chainId);
@@ -41,7 +42,7 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        [Route("chains/{chainId}")]
+        [Route("{userId:guid}/chains/{chainId}")]
         public async Task<IActionResult> DeleteChain([FromRoute] Guid userId, [FromRoute] Guid chainId)
         {
             await chainService.DeleteChainAsync(chainId);
@@ -49,7 +50,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        [Route("chains/{chainId}")]
+        [Route("{userId:guid}/chains/{chainId}")]
         public async Task<ActionResult<ChainDto>> UpdateChain([FromRoute] Guid userId, [FromRoute] Guid chainId, [FromBody] UpdateChainDto request)
         {
             request.Id = chainId;
@@ -58,7 +59,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("chains/{chainId}/check-in")]
+        [Route("{userId:guid}/chains/{chainId}/check-in")]
         [Consumes("multipart/form-data")]
         public async Task<ActionResult<CheckInResponseDto>> CheckIn([FromForm] CheckInDto dto)
         {
@@ -83,6 +84,21 @@ namespace API.Controllers
             });
 
             return Ok(response);
+        }
+
+        [HttpGet("current")]
+        public ActionResult<CurrentUserDto> GetCurrentUser()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userName = User.FindFirstValue(ClaimTypes.Name);
+            var email = User.FindFirstValue(ClaimTypes.Email);
+
+            return new CurrentUserDto
+            {
+                Id = userId,
+                Email = email,
+                UserName = userName,
+            };
         }
     }
 }
