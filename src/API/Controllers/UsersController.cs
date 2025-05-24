@@ -14,53 +14,74 @@ namespace API.Controllers
     [ValidateModel]
     public class UsersController(IChainService chainService, IChainEntryService chainEntryService, IImageValidator imageValidator) : ControllerBase
     {
-        [HttpPost]
-        [Route("{userId:guid}/chains")]
-        public async Task<IActionResult> Create([FromRoute] Guid userId, [FromBody] CreateChainDto request)
+        [HttpPost("{userId:guid}/chains")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<IActionResult> Create(
+            [FromRoute] Guid userId, 
+            [FromBody] CreateChainDto request)
         {
             request.UserId = userId;
             await chainService.CreateChainAsync(request);
 
-            return Ok("Chain created successfully");
+            return CreatedAtAction("GetChainsByUserIdAsync", new { Id = userId});
         }
 
-        [HttpGet]
-        [Route("{userId:guid}/chains")]
-        public async Task<ActionResult<ResponseDto<IEnumerable<ChainDto>>>> GetChainsByUserId([FromRoute] Guid userId, [FromQuery] ChainsRequestDto request)
+
+        [HttpGet("{userId:guid}/chains")]
+        [ProducesResponseType(typeof(ResponseDto<IEnumerable<ChainDto>>), StatusCodes.Status200OK, "application/json")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ResponseDto<IEnumerable<ChainDto>>>> GetChainsByUserId(
+            [FromRoute] Guid userId, 
+            [FromQuery] ChainsRequestDto request)
         {
             request.Id = userId;
             var response = await chainService.GetChainsByUserIdAsync(request);
             return Ok(response);
         }
 
-        [HttpGet]
-        [Route("{userId:guid}/chains/{chainId}")]
-        public async Task<ActionResult<ResponseDto<ChainDto>>> GetChainById([FromRoute] Guid userId, [FromRoute] Guid chainId)
+        
+        [HttpGet("{userId:guid}/chains/{chainId}")]
+        [ProducesResponseType(typeof(ResponseDto<ChainDto>), StatusCodes.Status200OK, "application/json")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ResponseDto<ChainDto>>> GetChainById(
+            [FromRoute] Guid userId, 
+            [FromRoute] Guid chainId)
         {
             var response = await chainService.GetChainByIdAsync(chainId);
             return Ok(response);
         }
 
-        [HttpDelete]
-        [Route("{userId:guid}/chains/{chainId}")]
-        public async Task<IActionResult> DeleteChain([FromRoute] Guid userId, [FromRoute] Guid chainId)
+        
+        [HttpDelete("{userId:guid}/chains/{chainId}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteChain(
+            [FromRoute] Guid userId, 
+            [FromRoute] Guid chainId)
         {
             await chainService.DeleteChainAsync(chainId);
             return Ok("Chain deleted successfully");
         }
 
-        [HttpPut]
-        [Route("{userId:guid}/chains/{chainId}")]
-        public async Task<ActionResult<ChainDto>> UpdateChain([FromRoute] Guid userId, [FromRoute] Guid chainId, [FromBody] UpdateChainDto request)
+        
+        [HttpPut("{userId:guid}/chains/{chainId}")]
+        [ProducesResponseType(typeof(ChainDto), StatusCodes.Status200OK, "application/json")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ChainDto>> UpdateChain(
+            [FromRoute] Guid userId, 
+            [FromRoute] Guid chainId, 
+            [FromBody] UpdateChainDto request)
         {
             request.Id = chainId;
             var response = await chainService.UpdateChainAsync(request);
             return Ok(response);
         }
 
-        [HttpPost]
-        [Route("{userId:guid}/chains/{chainId}/check-in")]
+        
+        [HttpPost(("{userId:guid}/chains/{chainId}/check-in"))]
         [Consumes("multipart/form-data")]
+        [ProducesResponseType(typeof(CheckInResponseDto), StatusCodes.Status200OK, "application/json")]
+        [ProducesResponseType(typeof(CheckInResponseDto), StatusCodes.Status400BadRequest, "application/json")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CheckInResponseDto>> CheckIn([FromForm] CheckInDto dto)
         {
 
@@ -86,6 +107,7 @@ namespace API.Controllers
             return Ok(response);
         }
 
+        
         [HttpGet("current")]
         public ActionResult<CurrentUserDto> GetCurrentUser()
         {
