@@ -1,6 +1,7 @@
 ﻿
 using Domain.Entities;
 using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Seeders;
@@ -12,9 +13,19 @@ internal class Seeder(ILogger<Seeder> logger, DBChDbContext dbContext) : ISeeder
         logger.LogInformation("Check database connection for seed datas");
         if (await dbContext.Database.CanConnectAsync())
         {
+            await Migrate();
             await AddCategoriesToDbContext();
-
+  
             await dbContext.SaveChangesAsync();
+        }
+    }
+
+
+    private async Task Migrate()
+    {
+        if (dbContext.Database.GetPendingMigrations().Any())
+        {
+            await dbContext.Database.MigrateAsync();
         }
     }
 
