@@ -29,10 +29,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseRateLimiter();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers().RequireRateLimiting("FixedPolicy");
 
 app.MapGroup("v1/identity").MapIdentityApi<User>();
 

@@ -4,10 +4,12 @@ using Application.Services.Abstract;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 
 namespace API.Controllers
 {
+    [EnableRateLimiting("FixedPolicy")]
     [Route("v1/[controller]")]
     [ApiController]
     [Authorize]
