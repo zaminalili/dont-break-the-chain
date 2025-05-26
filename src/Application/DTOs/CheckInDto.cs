@@ -6,9 +6,6 @@ namespace Application.DTOs;
 
 public class CheckInDto
 {
-    [Required(ErrorMessage = "Chain ID is required.")]
-    public Guid ChainId { get; set; }
-
     
     [Required(ErrorMessage = "Category name is required.")]
     public string CategoryName { get; set; } = default!;

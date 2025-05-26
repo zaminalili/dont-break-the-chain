@@ -10,11 +10,12 @@ internal partial class ChainService : IChainService
     // The private members and constructor are in ChainServicePrivateMembers.cs
 
 
-    public async Task CreateChainAsync(CreateChainDto dto)
+    public async Task CreateChainAsync(Guid userId, CreateChainDto dto)
     {
-        logger.LogInformation("Creating chain for user {UserId}", dto.UserId);
+        logger.LogInformation("Creating chain for user {UserId}", userId);
         logger.LogInformation("Mapping CreateChainDto to Chain entity");
         var chain = mapper.Map<Chain>(dto);
+        chain.UserId = userId;
 
         await chainRepository.AddAsync(chain);
         logger.LogInformation("Chain created successfully with ID {ChainId}", chain.Id);

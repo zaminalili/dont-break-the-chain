@@ -16,8 +16,6 @@ public class CreateChainDto
     [Required]
     public DateTime StartDate { get; set; }
 
-    [Required]
-    public Guid UserId { get; set; }
     
     [Required]
     public Guid CategoryId { get; set; }

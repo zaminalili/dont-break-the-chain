@@ -20,8 +20,8 @@ namespace API.Controllers
             [FromRoute] Guid userId, 
             [FromBody] CreateChainDto request)
         {
-            request.UserId = userId;
-            await chainService.CreateChainAsync(request);
+
+            await chainService.CreateChainAsync(userId, request);
 
             return CreatedAtAction("GetChainsByUserIdAsync", new { Id = userId});
         }
@@ -82,7 +82,10 @@ namespace API.Controllers
         [ProducesResponseType(typeof(CheckInResponseDto), StatusCodes.Status200OK, "application/json")]
         [ProducesResponseType(typeof(CheckInResponseDto), StatusCodes.Status400BadRequest, "application/json")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CheckInResponseDto>> CheckIn([FromForm] CheckInDto dto)
+        public async Task<ActionResult<CheckInResponseDto>> CheckIn(
+            [FromRoute] Guid userId,
+            [FromRoute] Guid chainId,
+            [FromForm] CheckInDto dto)
         {
 
             var isMatch = await imageValidator.IsMatchAsync(dto.Image, dto.CategoryName);
@@ -96,10 +99,10 @@ namespace API.Controllers
                 return BadRequest(response);
 
 
-            await chainService.IncreaseStreakAsync(dto.ChainId);
+            await chainService.IncreaseStreakAsync(chainId);
             await chainEntryService.CreateChainEntryAsync(new CreateChainEntryDto
             {
-                ChainId = dto.ChainId,
+                ChainId = chainId,
                 Date = dto.Date,
                 Note = dto.Note,
             });

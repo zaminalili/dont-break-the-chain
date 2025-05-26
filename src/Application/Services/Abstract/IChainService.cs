@@ -9,7 +9,7 @@ public interface IChainService
     Task<ResponseDto<IEnumerable<ChainDto>>> GetPublicChainsByUserIdAsync(ChainsRequestDto dto);
     Task<ResponseDto<IEnumerable<ChainDto>>> GetChainsByCategoryIdAsync(ChainsRequestDto dto);
 
-    Task CreateChainAsync(CreateChainDto dto);
+    Task CreateChainAsync(Guid userId, CreateChainDto dto);
     Task<ChainDto> UpdateChainAsync(UpdateChainDto dto);
     Task DeleteChainAsync(Guid chainId);
     Task IncreaseStreakAsync(Guid chainId);
