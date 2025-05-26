@@ -13,6 +13,7 @@ namespace Application.Extensions
 
             services.AddScoped<IChainService, ChainService>();
             services.AddScoped<IChainEntryService, ChainEntryService>();
+            services.AddScoped<ICategoryService, CategoryService>();
         }
     }
 }
