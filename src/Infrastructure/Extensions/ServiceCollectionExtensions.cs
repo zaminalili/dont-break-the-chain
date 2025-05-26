@@ -30,6 +30,7 @@ namespace Infrastructure.Extensions
 
             services.AddScoped<IChainRepository, ChainRepository>();
             services.AddScoped<IChainEntryRepository, ChainEntryRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             services.AddScoped<ISeeder, Seeder>();
 
