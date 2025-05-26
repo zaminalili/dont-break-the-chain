@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
 using Domain.Repositories;
 using Infrastructure.Repositories;
 using Infrastructure.Seeders;
+using Infrastructure.Services;
 
 
 namespace Infrastructure.Extensions
@@ -30,8 +30,13 @@ namespace Infrastructure.Extensions
 
             services.AddScoped<IChainRepository, ChainRepository>();
             services.AddScoped<IChainEntryRepository, ChainEntryRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             services.AddScoped<ISeeder, Seeder>();
+
+           
+            services.AddScoped<IImageValidator, GeminiService>();
+
         }
     }
 }
